@@ -44,6 +44,7 @@
 
  - confirm：用户点击“OK”，返回 true；用户点击“Cancel”，返回 false
  - prompt：将用户输入内容作为字符串返回
+
 # 第3章
 ## 3.1 定义函数
 当程序执行到 return 语句时，会立刻跳出当前函数，并将返回值赋值给函数的调用者。如果return 后面没有任何表达式，则返回 undefined
@@ -53,7 +54,8 @@
 
  - 传递多余参数时，多余参数会被忽略
  - 传递参数少于要求数量时，遗漏参数会被赋值为 undefined
-## 闭包
+
+## 3.8 闭包
 
     function wrapValue(x) {
       return function(y) { return x * y; };
