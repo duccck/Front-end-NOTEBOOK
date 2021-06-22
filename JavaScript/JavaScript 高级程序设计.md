@@ -58,7 +58,7 @@ var 操作符定义的变量会成为包含它的函数的局部变量
     let str2;
     var str2; //SyntaxError
 
-let 声明的变量不会在作用域中被提升
+let 声明的变量不会在作用域中被提升（虽然在解析时 JavaScript 引擎会注意到 let 声明。在 let 声明之前的执行瞬间被称为”暂时性死区“）
 let 声明的变量不会成为 window 对象的属性（var 则会）
 
     //let 定义的迭代变量作用域仅限于 for 循环中，var 则会渗透至循环体外部
