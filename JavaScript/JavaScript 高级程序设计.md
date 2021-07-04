@@ -785,6 +785,12 @@ length 属性保存函数定义的命名参数个数
 prototype 保存了引用类型所有实例方法，prototype 属性是不可枚举的，for-in 循环不会返回这个属性
 #### apply()
 apply() 接收两个参数：函数内 this 的值（即会设置调用函数时函数体内 this 对象的值）和一个参数数组（可以是 Array 实例或 arguments 对象）
+    
+    const array = ['a', 'b'];
+    const elements = [0, 1, 2];
+    array.push.apply(array, elements);
+    console.log(array); // ["a", "b", 0, 1, 2]
+
 #### call()
 call() 与 apply() 相同，只是第二个参数需要逐个传递
 
@@ -795,8 +801,8 @@ call() 与 apply() 相同，只是第二个参数需要逐个传递
       console.log(this.color);
     }
     
-    sayColor(window); // red，this 值为 window
-    sayColor(o); // blue，this 值为 o
+    sayColor.call(window); // red，this 值为 window
+    sayColor.call(o); // blue，this 值为 o
 
 使用 apply() 和 call() 可以将任意对象设置为任意函数的作用域
 #### bind()
