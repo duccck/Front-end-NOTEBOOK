@@ -776,6 +776,17 @@ f 是一个标识符，仅在函数作用域内有效
 *注：在全局函数调用，this 在非严格模式下等于 window；严格模式下等于 undefined*
 ### 10.9.3 caller
 ES5 还给函数对象添加了一个 caller 属性，caller 属性引用的是调用当前函数的函数，如果是在全局作用域中调用，则为 null
+
+    function outer() {
+      inner();
+    }
+    
+    function inner() {
+      console.log(inner.caller);
+    }
+    
+    outer(); // 会显示 outer() 源代码
+
 ### 10.9.4 new.target
 ES6 新增了检测函数是否使用 new 关键字调用的 new.target 属性。如果函数是正常调用的，该属性值为 undefined；如果是通过 new 关键字调用的，则 new.target 属性将引用被调用的构造函数
 ## 10.10 函数属性与方法
