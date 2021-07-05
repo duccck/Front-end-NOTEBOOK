@@ -115,7 +115,7 @@ Null 类型只有一个值，即特殊值 null。逻辑上来说，null 表示�
     //undefined 值由 null 值派生而来，因此它们表面上相等
     console.log(undefined == null); //true
 
-### Boolean 类型
+### 3.4.4 Boolean 类型
 
  - Boolean() 转型函数
 
@@ -127,7 +127,7 @@ Null 类型只有一个值，即特殊值 null。逻辑上来说，null 表示�
 |Null||null|
 |Undefined||undefined|
 
-### Number 类型
+### 3.4.5 Number 类型
 在 ECMAScript 中，0 === +0 === -0
 
 任何涉及 NaN 的操作始终返回 NaN。NaN 不等于包括 NaN 在内的任何值
@@ -182,7 +182,7 @@ Null 类型只有一个值，即特殊值 null。逻辑上来说，null 表示�
 |\r|回车|
 |\xnn|以十六进制编码 nn 表示的字符，如 \x41 等于 “A”|
 |\unnnn|以十六进制编码 nnnn 表示的 Unicode 字符，如 \u0040 等于 “A"|
-|\\\\|反斜杠|
+|\\\\ |反斜杠|
 |\\`|单引号|
 |\\"|双引号|
 |\\'|反引号|
