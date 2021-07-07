@@ -826,7 +826,10 @@ call() 与 apply() 相同，只是第二个参数需要逐个传递
 
 使用 apply() 和 call() 可以将任意对象设置为任意函数的作用域
 #### bind()
-ES5 新增了 bind()，bind() 会创建一个**新的函数实例**，其 this 值会被绑定为传给 bind() 的对象
+
+    bind(thisArg [, arg1 [, arg2...]])
+
+ES5 新增了 bind()，bind() 会创建一个**指定了 this 值和初始参数（提供时）的被调用函数的副本**，其 this 值会被绑定为传给 bind() 的对象
 
     window.color = "red";
     let o = { color: "blue" };
