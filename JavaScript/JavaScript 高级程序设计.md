@@ -629,11 +629,42 @@ ECMAScript 采用词法作用域（即静态作用域，对应动态作用域）
     // 当只有一行代码时，可以省略大括号，且隐式返回这行代码的值（此时 return 也要省略，否则会报错）
     let f = () => "hello world";
 
-#### 箭头函数的局限
+#### 箭头函数的局限（补充）
 
- 1. 不能使用 arguments / super / new.target
- 2. 不能作为构造函数
- 3. 没有 prototype 属性
+ 1. 没有自己的 this，而是从作用域链的上一层继承而来
+ 2. 因为不能绑定 this，所以 apply 、call、bind 不适用
+ 3. 没有 arguments 对象，而是从作用域链的上一层继承而来
+ 4. 不能作为构造函数
+ 5. 没有 prototype 属性
+ 6. 没有 super、new target
+
+---
+
+    // arrow function
+    let group = {
+      title: "Our Group",
+      students: ["John", "Pete", "Alice"],
+      showList() {
+        this.students.forEach(
+          // "this.title" is exactly the same as in the outer method "showList". That is: "group.title"
+          student => alert(this.title + ': ' + student)
+        );
+      }
+    };
+    group.showList();
+    
+    // no arrow function
+    let group = {
+      title: "Our Group",
+      students: ["John", "Pete", "Alice"],
+      showList() {
+        this.students.forEach(function(student) {
+          // Error: Cannot read property 'title' of undefined
+          alert(this.title + ': ' + student);
+        });
+      }
+    };
+    group.showList();
 
 ## 10.2 函数名
 
