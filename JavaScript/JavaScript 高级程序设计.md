@@ -856,6 +856,12 @@ call() 与 apply() 相同，只是第二个参数需要逐个传递
     sayColor.call(o); // blue，this 值为 o
 
 使用 apply() 和 call() 可以将任意对象设置为任意函数的作用域
+
+    function max(arr) {
+      return Math.max.apply(null, [1, 2]);
+    }
+
+ES6 之前没有扩展操作符 `...`，所有使用 `apply` 来替代。在这里并不需要指定 `Math.max()` 的 this，null（其实这里可以填任何对象都不影响结果，通常使用 null 或 undefined）的作用仅仅是占位
 #### bind()
 
     bind(thisArg [, arg1 [, arg2...]])
