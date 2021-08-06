@@ -634,6 +634,334 @@ ECMAScript 采用词法作用域（即静态作用域，对应动态作用域）
 ### 4.3.4 内存管理
 #### 内存泄漏
 全局变量、定时器、闭包很容易导致内存泄漏
+# 第6章 集合引用类型
+## 6.1 Object
+#### 创建 Object
+
+    // Object 构造函数
+    let o = new Object();
+    
+    // 对象字面量（使用字面量方式不会调用构造函数）
+    let o = {};
+
+#### 点语法和中括号存取属性
+
+|方式|对属性名的要求|
+|--|--|
+|点语法|当属性名为合法变量名时才能使用，o.name|
+|中括号|属性名可以是字符串或数字，甚至可以是变量，o["my name"]、o[1]|
+
+#### 动态访问属性
+当使用中括号存取属性时，可以通过变量访问属性
+
+    let property = "name";
+    console.log(person[property]);
+
+## 6.2 Array
+### 6.2.1 创建数组
+
+    let arr = new Array([option]); // option 可以是数组长度或元素值
+    let arr = [];
+
+#### Array.from() / Array.of()（ES6 新增）
+Array.from() 用于将类数组结构（即任何可迭代对象）或者有一个 length 属性和可索引元素的结构转换为数组实例
+
+    Array.from(object [, mapFunction [, thisValue]]) // 第三个参数用于指定 mapFunction 中 this 的值
+    console.log(Array.from(”hello“)); // ["h", "e", "l", "l", "o"]
+    console.log(Array.from([2, 3], x => x ** 2)); //[4, 9]
+
+Array.of() 可以把一组参数转换为数组
+
+    console.log(Array.of(1, 2, 3)); //[1, 2, 3]
+
+### 6.2.2 数组空位
+
+    const arr = [, , ,];
+    console.log(arr.length); // 3
+
+|ES6 新增方法和迭代器|ES6 之前的方法  |
+|--|--|
+|如：Array.from()、Array.of()|如：join()、map()|
+|空位当作存在的元素，值为undefined|视为空字符串或跳过空位，因方法而异|
+
+*注：由于不同方法行为不一致，如果需要空位，可以显式地用 undefined 来代替*
+### 6.2.3 数组索引
+通过修改 length 属性，可以实现新增（使用 undefined 填充）或删减元素。使用 length 属性可以方便地向数组末尾添加元素
+
+    let arr = [1, 2];
+    arr[arr.length] = 3;
+
+*注：数组最多可以包含4294967295个元素*
+### 6.2.4 检测数组（Array.isArray()）
+当只有一个网页（因而只有一个全局作用域）时，使用 instanceof 可以判断对象是否为数组。但当网页有多个框架时，则可能涉及两个不同地全局执行上下文，因此就会有两个不同版本的 Array 构造函数，此时需要使用 Array.isArray() 来判断
+### 6.2.5 迭代器方法
+在 ES6 中，Array 原型暴露了3个用于检索数组内容的方法，它们都返回迭代器
+
+ 1. keys()，返回索引
+ 2. values()，返回值
+ 3. entries()，返回索引/值对
+
+---
+
+    const arr = ["a", "b"];
+    console.log(Array.from(arr.keys())); // [0, 1]
+    console.log(Array.from(arr.values())); // ["a", "b"]
+    console.log(Array.from(arr.entries())); // [0, "a"], [1, "b"]
+
+### 6.2.6 复制和填充方法
+
+ 1. copyWithin(value, start, end)
+ 2. fill(target, start, end)
+
+|copyWithin()|fill()|
+|--|--|
+|target，插入位置||
+|start，包含；不提供则默认为0||
+|end，不包含；不提供则默认到数组末尾||
+|负索引 = length + 负值||
+|静默忽略：1、超过数组边界，2、零长度，3、方向相反的索引范围||
+|索引部分可用(仅超过边界的情况，2、3不适用)，则可用部分有效||
+
+    const arr = [1, 2, 3, 4, 5, 6];
+    console.log(arr.copyWithin(1)); // [1, 1, 2, 3, 4, 5]；不提供开始索引，则默认从0复制到数组末尾
+
+### 6.2.7 转换方法
+
+|方法|返回值|
+|--|--|
+|1、valueOf()|数组本身|
+|2、toString()|每个元素的字符串形式以逗号分隔拼接成的字符串|
+|3、toLocaleString()|以逗号分隔的数组值的字符串，调用的是每个元素的 toLocaleString()，而不是 toString()|
+|4、join(separator)，不提供参数则默认为","||
+
+如果数组中的某一项为 null 或 undefined，则在以上方法返回的结果中以空字符串表示
+### 6.2.8 栈方法
+
+|方法|作用|返回值|
+|--|--|--|
+|push(item1, item2...)|将数据项添加到数组末尾|返回新的数组长度|
+|pop()|删除数组末尾项，同时 length - 1|返回被删除项|
+
+### 6.2.9 队列方法
+
+|方法|作用|返回值|
+|--|--|--|
+|unshift(item1, item2...)|将数据项添加到数组开头|返回新的数组长度|
+|shift()|删除数组开头项，同时 length - 1|返回被删除项|
+
+### 6.2.10 排序方法
+
+ 1. reverse()
+ 2. sort([compareFunction])
+
+#### 比较函数
+
+    // 数组元素为字符串
+    (pre, next) => pre > next ? 1 : -1;
+    
+    // 数组元素为数值
+    (pre, next) => pre - next;
+
+|返回值|排序位置|
+|--|--|
+|-1|[pre, next]|
+|1|[next, pre]|
+
+如果要更改排序规则，调换 return 值即可
+### 6.2.11 操作方法
+#### concat()
+
+    array.concat("string1", "string2", [array1], [array2]...)
+
+concat() 会创建当前数组的副本，然后将参数添加到副本末尾，最后返回新构建的数组。参数数组默认被**打平**，类数组对象参数不会被打平，可以指定一个特殊的符号 Symbol.isConcatSpreadable 来改变该行为
+
+    let arr1 = [];
+    let arr2 = ["hello". "world"];
+    arr2[Symbol.isConcatSpreadable] = false;
+    console.log(arr1.concat(arr2, "again")); //[["hello", "world"], "again"]
+    
+    let o = {
+      [Symbol.isConcatSpreadable]: true,
+      length: 2,
+      0: "hello",
+      1: "world"
+    }
+    // 或者 o[Symbol.isConcatSpreadable] = true;
+    console.log(arr1.concat(o)); // ["hello", "world"]
+    
+    o[Symbol.isConcatSpreadable] = false;
+    console.log(arr1.concat(o)); // [[object Object] { length: 2, 0: "hello", 1: "world" }]
+
+#### slice()
+
+    // start、end 规则与 fill() 相同
+    array.slice([start [, end]])
+
+slice()  返回一个包含原数组一个或多个元素的新数组
+#### splice()
+
+    array.splice(index [, howmany [, item1, item2...]])
+    // index, the position to add / remove
+    // howmany, number of items to be removed
+    // item, new element to be added
+
+ 1. 删除元素，splice(0, 2)
+ 2. 插入元素，splice(0, 0, "hello", "world")
+ 3. 替换元素，splice(0, 1, "hello", "world")
+
+splice() 返回一个被删除元素的数组。如果没有元素被删除，则返回空数组
+### 6.2.12 搜索和位置方法
+ECMAScript 提供两类数组搜索方式
+
+ 1. 严格相等搜索
+ 2. 断言函数搜索
+
+#### 严格相等
+
+ 1. indexOf(item [, start])，返回第一个符合的元素位置，没有则返回 -1
+ 2. lastIndexOf(item [, start])
+ 3. includes(item [, start])，返回布尔值，表示至少有一个匹配元素
+
+在与数组每一项进行比较时，使用 === 比较
+
+    let person = {name: "allen"};
+    let people = [{name: "allen"}];
+    console.log(people.indexOf(person)); // -1，不同对象不能比较
+
+#### 断言函数
+
+ 1. find(function(currentValue [, index [, array]]) [, thisValue])
+ 2. findIndex(function(currentValue [, index [, array]]) [, thisValue])
+
+|方法|true|false|
+|--|--|--|
+|find()|返回第一个匹配的元素|undefined|
+|findIndex()|返回第一个匹配元素的索引|-1|
+
+### 迭代方法
+
+|方法|接收参数|返回值|
+|--|--|--|
+|every|(function [, thisValue]), function(currentValue [, index [, array]])|如果对每一项调用函数都返回 true，则返回 true|
+|filter||返回函数返回 true 的项组成的数组|
+|forEach||没有返回值|
+|map||返回对每一项调用函数的返回值组成的数组|
+|some||只要存在一项调用函数的返回值为 true，则返回 true|
+
+*注：上述方法对数组的每一项都会调用传入的函数，且都不改变原数组*
+### 归并方法
+
+|方法|接收参数|返回值|
+|--|--|--|
+|reduce|(function(total (initailValue), currentValue [, currentIndex [, array]]) [, initialValue])|迭代数组的每一项，然后构建一个最终返回值|
+|reduceRight|||
+
+*注：如果没有指定第二个初始值参数，则将数组第一个元素作为初始值，然后从第二个元素开始迭代*
+## 6.3 定型数组（TypeArray）
+定型数组目的是提升向原生库传输数据的效率。TypeArray 不是一种类型，而是一种特殊的包含`数值类型`的数组
+### 6.3.1 历史
+为了利用 3D 图形 API 和 GPU 加速，以便在 <canvas> 元素里渲染复杂的图形而开发的 API（该 API 被命名为 `WebGL`）。但 JavaScript 数组中的数字（number 类型也是）以 64 位（即双精度）浮点数存储，需要转换成图形驱动程序 API 需要的 32 位浮点数。所以引入了一个提供 JavaScript 接口、C 语言风格的浮点值数组（具有数组元素为数值，长度不可变等特性）
+## 6.4 Map
+“键/值” 式存储可以使用 Object 来实现，但 ES6 新增的 Map 集合类型带来了真正的“键/值”存储机制。不同于 Object，在 Map 中，键可以是任意数据类型
+### 6.4.1 基本 API
+
+    // const m = new Map([[key1, val1], [key2, val2]]);
+    const m = new Map();
+    m.set("name", "Allen");
+    m.get("name"); // "Allen"
+    m.has("name"); // true
+    m.size; // 1
+    m.delete("name"); // 删除这个键值对，返回 true
+    m.clear(); // 删除所有键值对
+    
+    // 映射期待键值对，不论是否提供
+    const m = new Map([[]]);
+    m.has(undefined); // true
+    m.get(undefined); // undefined
+
+Map 内部使用 SameValueZero 比较操作，类似于严格对象相等的标准来检查键的匹配性
+### 6.4.2 顺序与迭代
+Map 与 Object 实现的键值对主要区别是，Map 实例会维护键值对插入的顺序
+
+    // entries()
+    // Symbol.iterator 属性（引用 entries()）
+    // 通过以上两种方式取得迭代器
+    m.entries === m[Symbol.iterator]; // true
+    
+    for(let pair of m.entries()) { console.log(pair); }
+    for(let pair of m[Symbol.iterator]()) { console.log(pair); }
+    
+    // keys()，返回键的迭代器
+    // values()，返回值的迭代器
+    for(let val of m.keys()) { console.log(val); }
+    for(let val of m.values()) { console.log(val); }
+
+### 6.4.3 选择 Object 还是 Map
+
+|项目|区别|
+|--|--|
+|内存占用|Map 更佳|
+|插入性能|Map 更佳|
+|查找速度|差异很小|
+|删除性能|Map 更佳|
+
+## 6.5 WeakMap
+“weak”描述的是 JavaScript 垃圾回收程序对待 WeakMap 键的方式
+### 6.5.1 基本 API
+API 与 Map 类型相同
+
+    const wm = new WeakMap();
+
+WeakMap 的键只能是 Object 或继承自 Object 的类型
+### 6.5.2 弱键
+### 6.5.3 不可迭代键
+### 6.5.4 使用弱映射
+## 6.6 Set
+ES6 新增的 Set 是一种集合类型，为 JavaScript 带来了集合数据结构。Set 在很多方面像是 Map 的加强版，它们有很多共同的 API 和行为
+### 6.6.1 基本 API
+
+    const s = new Set();
+    const s = new Set([1, 2, 3]); // 创建同时初始化实例，给构造函数传入一个可迭代对象
+    s.add(4); // add() 是幂等操作
+    s.has(1); // true
+    s.size; // 4
+    s.delete(4); // delete() 是幂等操作，返回 true
+    s.clear(); // 清空集合
+
+Set 可以包含任意数据类型的值，也使用 SameValueZero 比较操作
+### 6.6.2 顺序与迭代
+Set 会维护值插入时的顺序
+
+    // keys()，返回迭代器
+    // values()，返回迭代器
+    // Symbol.iterator 属性（引用 values()）
+    // 通过以方式取得迭代器
+    s.values === s.keys === s[Symbol.iterator]; // true
+    for(let val of s.values()) { console.log(val); }
+    
+    entries() // 返回一个迭代器，产生包含两个元素的数组（这两个元素是集合中的每个值得重复出现）
+    for(let pair of s.entries()) { console.log(pair); } // [val1, val1]
+
+修改集合中值的属性不会影响其作为集合值的身份
+
+    const s = new Set(["val1"]);
+    for(let val of s.values) { val = "val2"; console.log(s.has("val1")); } // true
+
+### 6.6.3 定义正式集合操作
+## 6.7 WeakSet
+### 6.7.1 基本 API
+### 6.7.2 弱值
+### 6.7.3 不可迭代值
+### 6.7.4 使用弱集合
+## 6.8 迭代与扩展操作
+ES6 新增的迭代器和扩展操作符对集合引用类型非常有用，可以让集合类型之间相互操作、复杂和修改变得异常方便
+
+ 1. Array
+ 2. 定型数组
+ 3. Map
+ 4. Set
+
+JavaScript 中的4种原生集合类型定义了默认迭代器，所以它们都支持顺序迭代（`for-of`）、扩展语法（`...`）和各种构建方法（`Array.of()` `Array.from()` 等）
 # 第10章 函数
 ## 10.1 箭头函数
 
