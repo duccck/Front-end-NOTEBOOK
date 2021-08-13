@@ -1,0 +1,4 @@
+### DOMContentLoaded 事件
+在 DOM 解析完成时触发
+### onload 事件
+页面内容加载完成后触发
