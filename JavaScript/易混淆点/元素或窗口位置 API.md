@@ -58,4 +58,4 @@
 ## getBoundingClientRect()
 |API|定义|包含|适用对象|
 |--|--|--|--|
-||The `left / x`, `top / y`, `right`, `bottom`, `width`, `height` properties describe the position and size of the overall rectangle in pixels|padding / border width|element|
+||The `left / x`, `top / y`, `right`, `bottom`, `width`, `height` properties describe the position according to viewport and size of the overall rectangle in pixels|padding / border width|element|
